@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+    android:windowSoftInputMode="adjustPan"
+
+    <fragment
+        android:id="@+id/fragment"
+        class="com.example.cp.Dashboard"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        tools:layout="@layout/dashboard" />
+
+    <fragment
+        android:id="@+id/fragment2"
+        class="com.example.cp.Grid"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="15"
+        tools:layout="@layout/grid" />
+
+
+
+
+</LinearLayout>
