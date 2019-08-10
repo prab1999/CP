@@ -32,6 +32,19 @@ public class Dashboard extends Fragment {
     String siteUrl;
     Context m;
     ArrayList<String> tags=new ArrayList<String>();
+    public void changes(){
+        Grid gd=(Grid)getFragmentManager().findFragmentById(R.id.fragment2);
+        if(!tags.isEmpty()){
+            boolean flag=gd.change(tags);
+            if(flag){
+                num.setText((Integer.parseInt(num.getText().toString())+1)+"");
+                Toast toast=Toast.makeText(getActivity(),"Added Successfully",Toast.LENGTH_SHORT);
+                toast.setMargin(50,50);
+                toast.show();
+                tags.clear();
+            }
+        }
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.dashboard, container, false);
@@ -54,24 +67,14 @@ public class Dashboard extends Fragment {
 
                 siteUrl = "https://codeforces.com/problemset/problem/"+c.substring(0,ind)+"/"+c.substring(ind);
                 (new ParseURL() ).execute();
-                while(tags.isEmpty()){}
-                Grid gd=(Grid)getFragmentManager().findFragmentById(R.id.fragment2);
-                if(!tags.isEmpty()){
-                    boolean flag=gd.change(tags);
-                    if(flag){
-                        num.setText((Integer.parseInt(num.getText().toString())+1)+"");
-                        Toast toast=Toast.makeText(getActivity(),"Added Successfully",Toast.LENGTH_SHORT);
-                        toast.setMargin(50,50);
-                        toast.show();
-                        tags.clear();
-                    }
-                }
-            }
-        });
+
+
+        }});
+
         return view;
     }
     private class ParseURL extends AsyncTask<Void, Void, Void> {
-        ProgressBar progressBar=(ProgressBar)findViewById(R.id.progressBar1);
+        ProgressBar progressBar=(ProgressBar)getActivity().findViewById(R.id.progressBar1);
 
         @Override
         protected void onPreExecute() {
@@ -102,6 +105,7 @@ public class Dashboard extends Fragment {
         @Override
         protected void onPostExecute(Void result) {
             // Set downloaded image into ImageVie
+            changes();
             progressBar.setVisibility(View.GONE);
         }
 
