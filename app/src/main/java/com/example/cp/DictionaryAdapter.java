@@ -14,7 +14,7 @@ import android.widget.TextView;
 import java.util.*;
 public class DictionaryAdapter extends BaseAdapter {
 
-    public HashMap<String,String> topics=new HashMap();
+    public HashMap<String,String> topics=new HashMap<>();
     public String[] keys={"2-sat","binary search","bitmasks","brute force","chinese remainder theorem",
             "combinatorics","constructive algorithms","data structures","dfs and similar",
             "divide and conquer","dp","dsu","expression parsing","fft","flows","games",
@@ -47,9 +47,15 @@ public class DictionaryAdapter extends BaseAdapter {
     }
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        TextView tv=new TextView(mcontext);
-        tv.setLayoutParams(new GridView.LayoutParams(200,300));
         String value=(String)topics.get(keys[i]);
+        TextView tv=new TextView(mcontext);
+        if(value=="0"){
+            tv.setVisibility(View.GONE);
+            return tv;
+        }
+
+        tv.setLayoutParams(new GridView.LayoutParams(200,300));
+
         int level=150-Integer.parseInt(value);
         if(level<=0){level=50;}
         tv.setBackgroundColor(Color.rgb(2*level,level,level));

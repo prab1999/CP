@@ -7,6 +7,7 @@ import org.jsoup.select.Elements;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -27,16 +28,58 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-
+import java.util.HashMap;
+@SuppressWarnings("unchecked")
 public class Dashboard extends Fragment {
-    TextView num;
-    EditText code;
+    TextView num,username;
+    EditText code,subid;
     Button but;
     View view;
-    String siteUrl;
+    String subUrl,quesurl;
     Context m;
     ArrayList<String> tags=new ArrayList<String>();
     boolean netconnected=false;
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.dashboard, container, false);
+        num = (TextView)view.findViewById(R.id.num);
+        code = (EditText) view.findViewById(R.id.code);
+        but=(Button)view.findViewById(R.id.button);
+        username=(TextView)view.findViewById(R.id.username);
+        subid=(EditText)view.findViewById(R.id.submission);
+        HashMap<String,String> map=null;
+        if(getArguments()!=null){
+        map=(HashMap<String,String>)getArguments().getSerializable("hashmap");}
+
+
+        if(map!=null){
+        username.setText("HANDLE : "+map.get("id"));
+        num.setText(map.get("num"));}
+        but.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {   String c=code.getText().toString();
+                int ind=c.length()-1;
+                for(int i=0;i<c.length();i++){
+                    if((int)c.charAt(i)>=65&&(int)c.charAt(i)<91){
+                        ind=i;
+                        break;
+                    }
+                }
+
+                siteUrl = "https://codeforces.com/contest/"+c.substring(0,ind)+"/submission/58780222";
+
+                but.setEnabled(false);
+                (new Checknet()).execute();
+                (new ParseURL() ).execute();
+
+
+            }});
+
+        return view;
+    }
+
     private boolean haveNetworkConnection() {
         boolean haveConnectedWifi = false;
         boolean haveConnectedMobile = false;
@@ -68,36 +111,7 @@ public class Dashboard extends Fragment {
         }
     }
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.dashboard, container, false);
-        num = (TextView)view.findViewById(R.id.num);
-        code = (EditText) view.findViewById(R.id.code);
-        but=(Button)view.findViewById(R.id.button);
-        m=getActivity();
-        but.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {   String c=code.getText().toString();
-                int ind=c.length()-1;
-                for(int i=0;i<c.length();i++){
-                    if((int)c.charAt(i)>=65&&(int)c.charAt(i)<91){
-                        ind=i;
-                        break;
-                    }
-                }
 
-                siteUrl = "https://codeforces.com/problemset/problem/"+c.substring(0,ind)+"/"+c.substring(ind);
-
-                but.setEnabled(false);
-                (new Checknet()).execute();
-                (new ParseURL() ).execute();
-
-
-        }});
-
-        return view;
-    }
     private class Checknet extends AsyncTask<Void,Void,Void>{
 
         boolean initialstate;
