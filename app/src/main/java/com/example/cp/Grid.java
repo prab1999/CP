@@ -23,16 +23,15 @@ public class Grid extends Fragment {
         gv.setAdapter(dc);
         return view;
     }
-    public boolean change(ArrayList<String> keys){
+    public boolean change(String[] keys){
         boolean flag=false;
-        for(int i=0;i<keys.size();i++){
+        for(int i=0;i<keys.length;i++){
 
-            String k=keys.get(i);
-            if(dc.topics.containsKey(k)){
+            String k=dc.keys[i];
                 flag=true;
-                dc.topics.put(k,(Integer.parseInt(dc.topics.get(k))+1)+"");
+                dc.topics.put(k,(keys[i]+""));
                 dc.notifyDataSetChanged();
-            }}
+            }
         return flag;
     }
 
