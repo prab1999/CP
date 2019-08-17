@@ -15,21 +15,19 @@ import java.util.*;
 public class DictionaryAdapter extends BaseAdapter {
 
     public HashMap<String,String> topics=new HashMap<>();
+    public ArrayList<Integer> index=new ArrayList<>();
     public String[] keys={"2-sat","binary search","bitmasks","brute force","chinese remainder theorem",
             "combinatorics","constructive algorithms","data structures","dfs and similar",
             "divide and conquer","dp","dsu","expression parsing","fft","flows","games",
             "geometry","graph matchings","graphs","greedy","hashing","implementation",
             "interactive","math","matrices","meet-in-the-middle","number theory","probabilities",
             "schedules","shortest paths","sortings","string suffix structures","strings",
-            "ternary search","trees","two pointers"
+            "ternary search","trees","two pointers","*special"
     };
     private Context mcontext;
+    int base_color=Color.parseColor("#804d00");
     public DictionaryAdapter(Context m){
         this.mcontext=m;
-
-        for(int i=0;i<keys.length;i++){
-            topics.put(keys[i],"0");
-        }
     }
     @Override
     public int getCount() {
@@ -47,24 +45,30 @@ public class DictionaryAdapter extends BaseAdapter {
     }
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        String value=(String)topics.get(keys[i]);
+        String value=(String)topics.get(keys[index.get(i)]);
         TextView tv=new TextView(mcontext);
-        if(value=="0"){
-            tv.setVisibility(View.GONE);
-            return tv;
-        }
 
         tv.setLayoutParams(new GridView.LayoutParams(200,300));
 
-        int level=150-Integer.parseInt(value);
-        if(level<=0){level=50;}
-        tv.setBackgroundColor(Color.rgb(2*level,level,level));
+
+        int color=Color.argb(Integer.parseInt(value)+10,Color.red(base_color),Color.green(base_color),Color.blue(base_color));
+        tv.setBackgroundColor(color);
         tv.setTextColor(Color.rgb(255,255,255));
         tv.setPadding(8,8,8,8);
         tv.setGravity(Gravity.CENTER);
-        tv.setText(keys[i]+":"+value);
+        tv.setText(keys[index.get(i)]+":"+value);
 
         return tv;
+    }
+    public static int manipulateColor(int color, float factor) {
+        int a = Color.alpha(color);
+        int r = Math.round(Color.red(color) * factor);
+        int g = Math.round(Color.green(color) * factor);
+        int b = Math.round(Color.blue(color) * factor);
+        return Color.argb(a,
+                Math.min(r,255),
+                Math.min(g,255),
+                Math.min(b,255));
     }
 
 

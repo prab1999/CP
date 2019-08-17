@@ -51,7 +51,12 @@ public class Dashboard extends Fragment {
         num.setText(map.get("num"));
         code.setText(map.get("code"));
         ver.setText(map.get("ver"));
-        tags=(map.get("tags")).split(" ");
+            System.out.println(map.get("tags"));
+        tags=(map.get("tags")).split("[|]");
+            for(int i=0;i<tags.length;i++){
+                System.out.print(tags[i]+"p");
+            }
+            System.out.println("tag:"+tags.length);
         changes();
 
         }

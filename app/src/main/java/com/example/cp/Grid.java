@@ -25,13 +25,17 @@ public class Grid extends Fragment {
     }
     public boolean change(String[] keys){
         boolean flag=false;
+        System.out.println(dc.keys.length);
         for(int i=0;i<keys.length;i++){
 
             String k=dc.keys[i];
                 flag=true;
-                dc.topics.put(k,(keys[i]+""));
-                dc.notifyDataSetChanged();
+                if(!keys[i].equals("0")){
+                dc.index.add(i);
+                dc.topics.put(k,(keys[i]+""));}
+
             }
+        dc.notifyDataSetChanged();
         return flag;
     }
 
