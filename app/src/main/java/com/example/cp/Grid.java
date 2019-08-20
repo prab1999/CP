@@ -25,7 +25,6 @@ public class Grid extends Fragment {
     }
     public boolean change(String[] keys){
         boolean flag=false;
-        System.out.println(dc.keys.length);
         for(int i=0;i<keys.length;i++){
 
             String k=dc.keys[i];

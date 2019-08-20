@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 
 import java.util.HashMap;
@@ -13,7 +14,7 @@ import java.util.HashMap;
 @SuppressWarnings("unchecked")
 public class MainActivity extends AppCompatActivity {
     HashMap<String,String> a;
-    boolean  b=false;
+    Dashboard samplefragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,20 +27,27 @@ public class MainActivity extends AppCompatActivity {
 
 
         FragmentManager fragmentManager = getFragmentManager();
-        Dashboard samplefragment = new Dashboard();
+        samplefragment = new Dashboard();
+        Grid gd=new Grid();
         Bundle bd=new Bundle();
         bd.putSerializable("hashmap",a);
         samplefragment.setArguments(bd);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment, samplefragment);
+        fragmentTransaction.add(R.id.fragment, samplefragment,"dash");
         fragmentTransaction.commit();
-        System.out.println(bd.size());
         ;
 
     }
-    public HashMap<String,String> getMap(){
-        System.out.println(b);return a;
+
+
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if ((keyCode == KeyEvent.KEYCODE_BACK))
+        {
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
-    private class Mymap extends HashMap<String,String>{}
+
 
 }

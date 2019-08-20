@@ -25,7 +25,7 @@ public class DictionaryAdapter extends BaseAdapter {
             "ternary search","trees","two pointers","*special"
     };
     private Context mcontext;
-    int base_color=Color.parseColor("#804d00");
+    int base_color=Color.parseColor("#330033");
     public DictionaryAdapter(Context m){
         this.mcontext=m;
     }
@@ -53,7 +53,7 @@ public class DictionaryAdapter extends BaseAdapter {
 
         int color=Color.argb(Integer.parseInt(value)+10,Color.red(base_color),Color.green(base_color),Color.blue(base_color));
         tv.setBackgroundColor(color);
-        tv.setTextColor(Color.rgb(255,255,255));
+        tv.setTextColor(Color.parseColor("#ffffff"));
         tv.setPadding(8,8,8,8);
         tv.setGravity(Gravity.CENTER);
         tv.setText(keys[index.get(i)]+":"+value);
