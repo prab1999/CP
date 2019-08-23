@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
             else{
-                if(questions.lastIndexOf(cod)==-1){
+                if(questions.lastIndexOf(cod)==-1&&code. lastIndexOf(cod))){
                     Integer val=unsolved.get(cod);
                     if(val!=null){
                         unsolved.put(cod,val+=1);
