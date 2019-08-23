@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_favorite) {
             bt=findViewById(R.id.action_favorite);
-            bt.setBackgroundColor(Color.parseColor("#FF1D8E9F"));
+            bt.setBackgroundColor(Color.parseColor("#FFED8E9F"));
             if(nt.haveNetworkConnection()){
                 Animation animation = new RotateAnimation(0.0f, 360.0f,
                         Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 animation.setRepeatCount(-1);
                 animation.setDuration(2000);
                 bt.setAnimation(animation);
-
+                bt.startAnimation(animation);
                 (new Parse(user.get("id"))).execute();
             }
             else{
@@ -149,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
                 e1.printStackTrace();
             }
             changes();
+            bt.clearAnimation();
             Toast toast=Toast.makeText(MainActivity.this,"Refreshed",Toast.LENGTH_SHORT);
             toast.setMargin(50,50);
             toast.show();
@@ -227,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
             else{
-                if(questions.lastIndexOf(cod)==-1){
+                if(questions.lastIndexOf(cod)==-1&&code.lastIndexOf(cod)==-1){
                     Integer val=unsolved.get(cod);
                     if(val!=null){
                         unsolved.put(cod,val+=1);
