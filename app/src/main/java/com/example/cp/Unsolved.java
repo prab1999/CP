@@ -12,12 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
+
+import com.google.android.material.tabs.TabLayout;
+
+import java.util.HashMap;
 
 
 public class Unsolved extends Fragment {
     public ProblemAdapter pb;
     String[] args;
-
+    TabLayout tabLayout=MainActivity.tabLayout;
+    HashMap<String,Integer> map=new HashMap<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,10 +41,22 @@ public class Unsolved extends Fragment {
         }
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent ik=new Intent(getActivity(),MainActivity.class);
-                ik.putExtra("key","hello from fragment");
-                startActivity(ik);
+            public void onItemClick(AdapterView<?> adapterView, View views, int i, long l) {
+                String code=((TextView)views).getText().toString();
+                String cd="";
+
+                int ind=0;
+                for(int k=0;k<code.length();k++){
+                    if(!Character.isDigit(code.charAt(k))){
+                        ind=k;
+                        break;
+                    }
+                }
+                int at=0;
+                at=code.lastIndexOf("Attempts");
+                cd=code.substring(0,ind)+"/"+code.substring(ind,at-1);
+                String url="https://codeforces.com/problemset/problem/"+cd;
+                MainActivity.addtab(cd,url);
 
             }
         });

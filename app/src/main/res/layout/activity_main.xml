@@ -25,10 +25,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tool_bar"
+        android:layout_gravity="center_horizontal"
         android:background="@color/colorPrimary"
         android:elevation="6dp"
+        app:tabMode="scrollable"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:tabIndicatorColor="@color/colorPrimaryDark"
+        app:tabIndicatorFullWidth="true" />
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"

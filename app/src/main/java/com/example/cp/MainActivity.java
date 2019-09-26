@@ -2,6 +2,7 @@ package com.example.cp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.view.menu.ActionMenuItemView;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
@@ -43,7 +44,9 @@ public class MainActivity extends AppCompatActivity {
     Net nt;
     ActionMenuItemView bt;
     Color c;
-    ViewPager viewPager;
+    static ViewPager viewPager;
+    static TabAdapter tabsAdapter;
+    static TabLayout tabLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,13 +56,13 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         Toolbar toolbar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Home"));
         tabLayout.addTab(tabLayout.newTab().setText("Solved"));
         tabLayout.addTab(tabLayout.newTab().setText("Unsolved"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         viewPager=(ViewPager)findViewById(R.id.view_pager);
-        TabAdapter tabsAdapter = new TabAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        tabsAdapter = new TabAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(tabsAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -88,6 +91,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -99,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_favorite) {
             bt=findViewById(R.id.action_favorite);
-            bt.setBackgroundColor(Color.parseColor("#FF1D8E9F"));
+            bt.setBackgroundColor(Color.parseColor("#FFED8E9F"));
             if(nt.haveNetworkConnection()){
                 Animation animation = new RotateAnimation(0.0f, 360.0f,
                         Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
@@ -107,25 +115,19 @@ public class MainActivity extends AppCompatActivity {
                 animation.setRepeatCount(-1);
                 animation.setDuration(2000);
                 bt.setAnimation(animation);
-
+                bt.startAnimation(animation);
                 (new Parse(user.get("id"))).execute();
             }
             else{
                 Toast.makeText(MainActivity.this, "No Internet", Toast.LENGTH_LONG).show();}
             return true;
         }
+        if(id==R.id.action_log){
+            finish();
+        }
         return super.onOptionsItemSelected(item);
     }
 
-
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
-        if ((keyCode == KeyEvent.KEYCODE_BACK))
-        {
-            finish();
-        }
-        return super.onKeyDown(keyCode, event);
-    }
     private class Parse extends AsyncTask<Void,Void,Void> {
         String userid;
         JSONObject obj;
@@ -149,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 e1.printStackTrace();
             }
             changes();
+            bt.clearAnimation();
             Toast toast=Toast.makeText(MainActivity.this,"Refreshed",Toast.LENGTH_SHORT);
             toast.setMargin(50,50);
             toast.show();
@@ -158,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void changes(){
-
+        lastsubid=user.get("sub");
         Bundle bd=new Bundle();
         bd.putSerializable("hashmap",user);
         dash.setArguments(bd);
@@ -166,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
         g.putString("tags",user.get("tags"));
         gd.setArguments(g);
         Bundle u=new Bundle();
-        System.out.println("main "+user.get("unsolved")+"\n"+user.get("attempt"));
         u.putStringArray("unsolved",new String[]{user.get("unsolved"),user.get("attempt")});
         ud.setArguments(u);
         viewPager.getAdapter().notifyDataSetChanged();
@@ -181,7 +183,6 @@ public class MainActivity extends AppCompatActivity {
         int ntag=t.keys.size();
         int[] tagarr=Tags.convertarray(user.get("tags"));
         String code=user.get("unsolved"),att=user.get("attempt");
-        System.out.print("ld data "+code+"  "+att);
         HashMap<String,Integer> unsolved = new HashMap<>();
         String[] codearr=code.split(" ");
         String[] attarr=att.split(" ");
@@ -248,6 +249,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    public static void addtab(String tab, String url){
+        tabsAdapter.addFragment(tab,url,tabLayout,viewPager);
 
+    }
+    public static void deletetab(String name){
+        tabsAdapter.deleteFragment(name,tabLayout,viewPager);
+
+    }
 
 }

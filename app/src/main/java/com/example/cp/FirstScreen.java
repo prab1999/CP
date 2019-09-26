@@ -2,6 +2,7 @@ package com.example.cp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -13,6 +14,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,7 +28,7 @@ import java.util.HashMap;
 
 public class FirstScreen extends AppCompatActivity {
     private EditText ed;
-    ProgressBar pb;
+    ProgressDialog pb;
     DB database=new DB(this);
     JSONObject obj;
     int status;
@@ -39,9 +41,12 @@ public class FirstScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_screen);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        pb=(ProgressBar)findViewById(R.id.progressBar1);
         bt=(Button)findViewById(R.id.login);
         ed=(EditText)findViewById(R.id.id);
+        pb=new ProgressDialog(this);
+        pb.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pb.setIndeterminate(false);
+        pb.setTitle("Loading...");
         user=null;
         ed.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -56,8 +61,8 @@ public class FirstScreen extends AppCompatActivity {
         {
             @Override
             public void onClick(View v){
+                pb.show();
                 String userid=ed.getText().toString();
-                pb.setVisibility(View.VISIBLE);
                 boolean b=database.checkuser(userid);
                 status=0;//0 for nothing,1 for success,-1 for failure
                 if(!b){
@@ -72,7 +77,7 @@ public class FirstScreen extends AppCompatActivity {
                 }
                 else{
                 user=database.GetUserByUserId(userid);
-                pb.setVisibility(View.INVISIBLE);
+                pb.dismiss();
                 Intent i=new Intent(FirstScreen.this,MainActivity.class);
                 i.putExtra("hashmap",user);
                 startActivity(i);}
@@ -117,17 +122,17 @@ public class FirstScreen extends AppCompatActivity {
         }
     }
     private void changes(String userid){
+        pb.dismiss();
         if(status==-1){
             ed.selectAll();
             Toast toast=Toast.makeText(FirstScreen.this,"No Such Handle On codeforces",Toast.LENGTH_SHORT);
             toast.setMargin(250,150);
             toast.setGravity(Gravity.CENTER,0,-50);
-            pb.setVisibility(View.INVISIBLE);
             toast.show();}
         else {
+
             Intent i=new Intent(FirstScreen.this,MainActivity.class);
             i.putExtra("hashmap",user);
-            pb.setVisibility(View.INVISIBLE);
             startActivity(i);
         }
     }
